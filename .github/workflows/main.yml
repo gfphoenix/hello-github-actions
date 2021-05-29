@@ -1,5 +1,8 @@
 name: A workflow for my Hello World file
-on: push
+on: [ workflow_dispatch, create ]
+  create:
+    tags:
+      - v*
 
 jobs:
   build:
@@ -9,4 +12,14 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ./.github/actions/build
         with:
-          MY_NAME: "Mona"
+          MESSAGE: "(Hello, Action! :-)"
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "We are ready!"
+          prerelease: false
+          automatic_release_tag: latest
+          files: outputs/*
+      - name: show env
+        run: |
+          echo "ALL IS WELL"
